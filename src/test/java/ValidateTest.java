@@ -1,8 +1,10 @@
 import org.junit.jupiter.api.Test;
+import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.util.ValidationException;
 
 import java.time.LocalDate;
 
@@ -51,14 +53,19 @@ public class ValidateTest {
     @Test
     void validateUserTestEmailIsEmpty(){
         User user = new User(12, "", "login", "name", LocalDate.now());
-
         UserController controller = new UserController();
-        final boolean validateTest = controller.validate(user);
+
+        try {
+            controller.validate(user);
+        }
+        catch (ResponseStatusException exception) {
+            assertEquals("400 BAD_REQUEST", exception.getMessage());
+        }
+
         final String emailTest = user.getEmail();
 
         assertNotNull(emailTest, "email isNull");
         assertEquals(emailTest, "");
-        assertEquals(validateTest, false);
     }
 
     @Test
@@ -77,14 +84,19 @@ public class ValidateTest {
     @Test
     void validateUserTestLoginIsEmpty(){
         User user = new User(12, "email@", "", "name", LocalDate.now());
-
         UserController controller = new UserController();
-        final boolean validateTest = controller.validate(user);
+
+        try {
+            controller.validate(user);
+        }
+        catch (ResponseStatusException exception) {
+            assertEquals("400 BAD_REQUEST", exception.getMessage());
+        }
+
         final String loginTest = user.getLogin();
 
         assertNotNull(loginTest, "login isNull");
         assertEquals(loginTest, "");
-        assertEquals(validateTest, false);
     }
 
     @Test
@@ -103,14 +115,19 @@ public class ValidateTest {
     @Test
     void validateUserTestBirthdayIsEmpty(){
         User user = new User(12, "email@", "login", "name", LocalDate.now().plusDays(1));
-
         UserController controller = new UserController();
-        final boolean validateTest = controller.validate(user);
+
+        try {
+            controller.validate(user);
+        }
+        catch (ResponseStatusException exception) {
+            assertEquals("400 BAD_REQUEST", exception.getMessage());
+        }
+
         final LocalDate birthdayTest = user.getBirthday();
 
         assertNotNull(birthdayTest, "birthday isNull");
         assertEquals(birthdayTest, LocalDate.now().plusDays(1));
-        assertEquals(validateTest, false);
     }
 
     @Test
@@ -129,14 +146,19 @@ public class ValidateTest {
     @Test
     void validateFilmTestNameIsEmpty(){
         Film film = new Film(12, "", "description", LocalDate.now().minusYears(10), 120);
-
         FilmController controller = new FilmController();
-        final boolean validateTest = controller.validate(film);
+
+        try {
+            controller.validate(film);
+        }
+        catch (ResponseStatusException exception) {
+            assertEquals("400 BAD_REQUEST", exception.getMessage());
+        }
+
         final String nameTest = film.getName();
 
         assertNotNull(nameTest, "name isNull");
         assertEquals(nameTest, "");
-        assertEquals(validateTest, false);
     }
 
     @Test
@@ -156,13 +178,18 @@ public class ValidateTest {
     void validateFilmTestDescriptionIsOver200(){
         String description = "description".repeat(20);
         Film film = new Film(12, "film", description, LocalDate.now().minusYears(10), 120);
-
         FilmController controller = new FilmController();
-        final boolean validateTest = controller.validate(film);
+
+        try {
+            controller.validate(film);
+        }
+        catch (ResponseStatusException exception) {
+            assertEquals("400 BAD_REQUEST", exception.getMessage());
+        }
+
         final String descriptionTest = film.getDescription();
 
         assertNotNull(descriptionTest, "description isNull");
-        assertEquals(validateTest, false);
     }
 
     @Test
@@ -181,14 +208,19 @@ public class ValidateTest {
     @Test
     void validateFilmTestReleaseIsBefore(){
         Film film = new Film(12, "film", "description", LocalDate.now().minusYears(200), 120);
-
         FilmController controller = new FilmController();
-        final boolean validateTest = controller.validate(film);
+
+        try {
+            controller.validate(film);
+        }
+        catch (ResponseStatusException exception) {
+            assertEquals("400 BAD_REQUEST", exception.getMessage());
+        }
+
         final LocalDate releaseTest = film.getReleaseDate();
 
         assertNotNull(releaseTest, "release isNull");
         assertEquals(releaseTest, LocalDate.now().minusYears(200));
-        assertEquals(validateTest, false);
     }
 
     @Test
@@ -207,14 +239,20 @@ public class ValidateTest {
     @Test
     void validateFilmTestDurationNegative(){
         Film film = new Film(12, "film", "description", LocalDate.now().minusYears(12), -120);
-
         FilmController controller = new FilmController();
-        final boolean validateTest = controller.validate(film);
+
+        try {
+            controller.validate(film);
+        }
+        catch (ResponseStatusException exception) {
+            assertEquals("400 BAD_REQUEST", exception.getMessage());
+        }
+
         final long durationTest = film.getDuration();
 
         assertNotNull(durationTest, "duration isNull");
         assertEquals(durationTest, -120);
-        assertEquals(validateTest, false);
+
     }
 }
 

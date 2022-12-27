@@ -65,7 +65,6 @@ public class UserController {
             }
         } catch (ValidationException exception){
             System.out.println(exception.getMessage());
-            return false;
         }
 
         return true;
