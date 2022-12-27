@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.util.HttpMethod;
 import ru.yandex.practicum.filmorate.util.ValidationException;
@@ -43,7 +45,7 @@ public class UserController {
 
         if(validate(user, HttpMethod.PUT) & users.containsKey(user.getId())){
             users.put(user.getId(), user);
-        }
+        } else throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
 
         return user;
     }

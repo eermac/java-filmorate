@@ -2,8 +2,10 @@ package ru.yandex.practicum.filmorate.controller;
 
 
 import lombok.SneakyThrows;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.util.HttpMethod;
 import ru.yandex.practicum.filmorate.util.ValidationException;
@@ -46,7 +48,7 @@ public class FilmController {
 
         if(validate(film, HttpMethod.PUT) & films.containsKey(film.getId())) {
             films.put(film.getId(), film);
-        }
+        } else throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
 
         return film;
     }
