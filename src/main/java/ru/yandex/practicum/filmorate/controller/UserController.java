@@ -1,9 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.util.ValidationException;
@@ -16,6 +13,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@RestController
 public class UserController {
     private final static Logger log = LoggerFactory.getLogger(UserController.class);
     private HashMap<Integer, User> users = new HashMap<>();
