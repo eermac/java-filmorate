@@ -27,7 +27,7 @@ public class ValidateTest {
 
     @Test
     void validateUserTestNameIsEmpty(){
-        User user = new User(12, "email@", "login", "", LocalDate.now());
+        User user = new User(12, "email@", "login", null, LocalDate.now());
 
         UserController controller = new UserController();
         final boolean validateTest = controller.validate(user, HttpMethod.POST);
