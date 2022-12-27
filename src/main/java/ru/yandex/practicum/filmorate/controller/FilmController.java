@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public class FilmController {
     private final static Logger log = LoggerFactory.getLogger(FilmController.class);
     private HashMap<Integer, Film> films = new HashMap<>();
-    private int idGenerate = 10000;
+    private int idGenerate = 0;
 
     public Integer setId(){
         idGenerate++;

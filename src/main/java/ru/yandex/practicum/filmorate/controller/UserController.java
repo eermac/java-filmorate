@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 public class UserController {
     private final static Logger log = LoggerFactory.getLogger(UserController.class);
     private HashMap<Integer, User> users = new HashMap<>();
-    private int idGenerate = 10000;
+    private int idGenerate = 0;
 
     public Integer setId(){
         idGenerate++;
