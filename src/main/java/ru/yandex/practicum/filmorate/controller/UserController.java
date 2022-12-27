@@ -20,7 +20,7 @@ public class UserController {
     private final static Logger log = LoggerFactory.getLogger(UserController.class);
     private HashMap<Integer, User> users = new HashMap<>();
 
-    @PostMapping(value = "/user")
+    @PostMapping(value = "/users")
     public User addUser(@RequestBody User user) {
         log.info("Добавляем пользователя");
 
@@ -31,7 +31,7 @@ public class UserController {
         return user;
     }
 
-    @PutMapping(value = "/user")
+    @PutMapping(value = "/users")
     public User updateFilm(@RequestBody User user) {
         log.info("Обновляем данные пользователя");
 

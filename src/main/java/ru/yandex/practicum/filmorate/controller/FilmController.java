@@ -21,7 +21,7 @@ public class FilmController {
     private final static Logger log = LoggerFactory.getLogger(FilmController.class);
     private HashMap<Integer, Film> films = new HashMap<>();
 
-    @PostMapping(value = "/film")
+    @PostMapping(value = "/films")
     public Film addFilm(@RequestBody Film film) {
         log.info("Добавляем фильм");
         if(validate(film)) {
@@ -31,7 +31,7 @@ public class FilmController {
         return film;
     }
 
-    @PutMapping("/film")
+    @PutMapping("/films")
     public Film updateFilm(@RequestBody Film film) {
         log.info("Обновляем фильм");
         if(validate(film)) {
