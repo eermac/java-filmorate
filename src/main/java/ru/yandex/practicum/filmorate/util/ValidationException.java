@@ -9,9 +9,14 @@ import org.springframework.web.server.ResponseStatusException;
 
 public class ValidationException extends RuntimeException {
     private final static Logger log = LoggerFactory.getLogger(ValidationException.class);
-    public ValidationException(final String message){
+    public ValidationException(final String message, HttpMethod method){
         log.error(message);
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+
+        if(HttpMethod.PUT.equals(method)){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        } else if (HttpMethod.POST.equals(method)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 }
 

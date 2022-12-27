@@ -4,6 +4,7 @@ import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.util.HttpMethod;
 import ru.yandex.practicum.filmorate.util.ValidationException;
 
 import java.time.LocalDate;
@@ -16,7 +17,7 @@ public class ValidateTest {
         User user = new User(12, "email@", "login", "name", LocalDate.now());
 
         UserController controller = new UserController();
-        final boolean validateTest = controller.validate(user);
+        final boolean validateTest = controller.validate(user, HttpMethod.POST);
         final String nameTest = user.getName();
 
         assertNotNull(nameTest, "name isNull");
@@ -29,7 +30,7 @@ public class ValidateTest {
         User user = new User(12, "email@", "login", "", LocalDate.now());
 
         UserController controller = new UserController();
-        final boolean validateTest = controller.validate(user);
+        final boolean validateTest = controller.validate(user, HttpMethod.POST);
         final String nameTest = user.getName();
 
         assertNotNull(nameTest, "name isNull");
@@ -42,7 +43,7 @@ public class ValidateTest {
         User user = new User(12, "email@", "login", "name", LocalDate.now());
 
         UserController controller = new UserController();
-        final boolean validateTest = controller.validate(user);
+        final boolean validateTest = controller.validate(user, HttpMethod.POST);
         final String emailTest = user.getEmail();
 
         assertNotNull(emailTest, "email isNull");
@@ -56,7 +57,7 @@ public class ValidateTest {
         UserController controller = new UserController();
 
         try {
-            controller.validate(user);
+            controller.validate(user, HttpMethod.POST);
         }
         catch (ResponseStatusException exception) {
             assertEquals("400 BAD_REQUEST", exception.getMessage());
@@ -73,7 +74,7 @@ public class ValidateTest {
         User user = new User(12, "email@", "login", "name", LocalDate.now());
 
         UserController controller = new UserController();
-        final boolean validateTest = controller.validate(user);
+        final boolean validateTest = controller.validate(user, HttpMethod.POST);
         final String loginTest = user.getLogin();
 
         assertNotNull(loginTest, "login isNull");
@@ -87,7 +88,7 @@ public class ValidateTest {
         UserController controller = new UserController();
 
         try {
-            controller.validate(user);
+            controller.validate(user, HttpMethod.POST);
         }
         catch (ResponseStatusException exception) {
             assertEquals("400 BAD_REQUEST", exception.getMessage());
@@ -104,7 +105,7 @@ public class ValidateTest {
         User user = new User(12, "email@", "login", "name", LocalDate.now());
 
         UserController controller = new UserController();
-        final boolean validateTest = controller.validate(user);
+        final boolean validateTest = controller.validate(user, HttpMethod.POST);
         final LocalDate birthdayTest = user.getBirthday();
 
         assertNotNull(birthdayTest, "birthday isNull");
@@ -118,7 +119,7 @@ public class ValidateTest {
         UserController controller = new UserController();
 
         try {
-            controller.validate(user);
+            controller.validate(user, HttpMethod.POST);
         }
         catch (ResponseStatusException exception) {
             assertEquals("400 BAD_REQUEST", exception.getMessage());
@@ -135,7 +136,7 @@ public class ValidateTest {
         Film film = new Film(12, "film", "description", LocalDate.now().minusYears(10), 120);
 
         FilmController controller = new FilmController();
-        final boolean validateTest = controller.validate(film);
+        final boolean validateTest = controller.validate(film, HttpMethod.POST);
         final String nameTest = film.getName();
 
         assertNotNull(nameTest, "name isNull");
@@ -149,7 +150,7 @@ public class ValidateTest {
         FilmController controller = new FilmController();
 
         try {
-            controller.validate(film);
+            controller.validate(film, HttpMethod.POST);
         }
         catch (ResponseStatusException exception) {
             assertEquals("400 BAD_REQUEST", exception.getMessage());
@@ -166,7 +167,7 @@ public class ValidateTest {
         Film film = new Film(12, "film", "description", LocalDate.now().minusYears(10), 120);
 
         FilmController controller = new FilmController();
-        final boolean validateTest = controller.validate(film);
+        final boolean validateTest = controller.validate(film, HttpMethod.POST);
         final String descriptionTest = film.getDescription();
 
         assertNotNull(descriptionTest, "description isNull");
@@ -181,7 +182,7 @@ public class ValidateTest {
         FilmController controller = new FilmController();
 
         try {
-            controller.validate(film);
+            controller.validate(film, HttpMethod.POST);
         }
         catch (ResponseStatusException exception) {
             assertEquals("400 BAD_REQUEST", exception.getMessage());
@@ -197,7 +198,7 @@ public class ValidateTest {
         Film film = new Film(12, "film", "description", LocalDate.now().minusYears(10), 120);
 
         FilmController controller = new FilmController();
-        final boolean validateTest = controller.validate(film);
+        final boolean validateTest = controller.validate(film, HttpMethod.POST);
         final LocalDate releaseTest = film.getReleaseDate();
 
         assertNotNull(releaseTest, "release isNull");
@@ -211,7 +212,7 @@ public class ValidateTest {
         FilmController controller = new FilmController();
 
         try {
-            controller.validate(film);
+            controller.validate(film, HttpMethod.POST);
         }
         catch (ResponseStatusException exception) {
             assertEquals("400 BAD_REQUEST", exception.getMessage());
@@ -228,7 +229,7 @@ public class ValidateTest {
         Film film = new Film(12, "film", "description", LocalDate.now().minusYears(12), 120);
 
         FilmController controller = new FilmController();
-        final boolean validateTest = controller.validate(film);
+        final boolean validateTest = controller.validate(film, HttpMethod.POST);
         final long durationTest = film.getDuration();
 
         assertNotNull(durationTest, "duration isNull");
@@ -242,7 +243,7 @@ public class ValidateTest {
         FilmController controller = new FilmController();
 
         try {
-            controller.validate(film);
+            controller.validate(film, HttpMethod.POST);
         }
         catch (ResponseStatusException exception) {
             assertEquals("400 BAD_REQUEST", exception.getMessage());
