@@ -41,7 +41,7 @@ public class UserController {
     public User updateFilm(@RequestBody User user) {
         log.info("Обновляем данные пользователя");
 
-        if(validate(user, HttpMethod.PUT)){
+        if(validate(user, HttpMethod.PUT) & users.containsKey(user.getId())){
             users.put(user.getId(), user);
         }
 

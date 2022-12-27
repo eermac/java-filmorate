@@ -44,7 +44,7 @@ public class FilmController {
     public Film updateFilm(@RequestBody Film film) {
         log.info("Обновляем фильм");
 
-        if(validate(film, HttpMethod.PUT)) {
+        if(validate(film, HttpMethod.PUT) & films.containsKey(film.getId())) {
             films.put(film.getId(), film);
         }
 
