@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
     private final static Logger log = LoggerFactory.getLogger(UserController.class);
     private HashMap<Integer, User> users = new HashMap<>();
@@ -27,7 +28,7 @@ public class UserController {
         return this.idGenerate;
     }
 
-    @PostMapping(value = "/users")
+    @PostMapping
     public User addUser(@RequestBody User user) {
         log.info("Добавляем пользователя");
 
@@ -39,7 +40,7 @@ public class UserController {
         return user;
     }
 
-    @PutMapping(value = "/users")
+    @PutMapping
     public User updateFilm(@RequestBody User user) {
         log.info("Обновляем данные пользователя");
 
@@ -50,34 +51,23 @@ public class UserController {
         return user;
     }
 
-    @GetMapping("/users")
+    @GetMapping
     public List<User> getUsers() {
-        List<User> userList = new ArrayList<>();
-
-        for(User next: users.values()){
-            userList.add(next);
-        }
-
-        return userList;
+        return new ArrayList<>(users.values());
     }
 
     public boolean validate(User user, HttpMethod method){
-
-        try {
-            if(user.getEmail().isEmpty() | (user.getEmail().indexOf('@') < 0)){
+            if(user.getEmail() == null | user.getEmail().isBlank() | (user.getEmail().indexOf('@') < 0)){
                 throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @", method);
-            } else if(user.getLogin().isEmpty() | (user.getLogin().indexOf(' ') >= 0)){
+            } else if(user.getLogin() == null | user.getLogin().isBlank() | (user.getLogin().indexOf(' ') >= 0)){
                 throw new ValidationException("Логин не может быть пустым и содержать пробелы", method);
-            } else if(user.getBirthday().isAfter(LocalDate.now())){
+            } else if(user.getBirthday() == null | user.getBirthday().isAfter(LocalDate.now())){
                 throw new ValidationException("Дата рождения не может быть в будущем.", method);
-            } else if(user.getName() == null){
+            } else if(user.getName() == null | user.getName().isBlank()){
                 System.out.println("test");
                 user.setName(user.getLogin());
                 return true;
             }
-        } catch (ValidationException exception){
-            System.out.println(exception.getMessage());
-        }
 
         return true;
     }
