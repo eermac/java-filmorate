@@ -61,11 +61,11 @@ public class FilmController {
     }
 
     public boolean validate(Film film, HttpMethod method){
-            if(film.getName() == null | film.getName().isBlank()){
+            if(film.getName() == null || film.getName().isBlank()){
                 throw new ValidationException("Название фильма не может быть пустым", method);
-            } else if(film.getDescription() == null | film.getDescription().length() > 200){
+            } else if(film.getDescription() == null || film.getDescription().length() > 200){
                 throw new ValidationException("Описание фильма не может быть больше 200 символов", method);
-            } else if(film.getReleaseDate() == null | film.getReleaseDate().isBefore(FIRST_RELEASE_FILM)){
+            } else if(film.getReleaseDate() == null || film.getReleaseDate().isBefore(FIRST_RELEASE_FILM)){
                 throw new ValidationException("Дата релиза не может быть раньше 28 декабря 1895 года", method);
             } else if(film.getDuration() < 1){
                 throw new ValidationException("Продолжительность фильма должна быть положительной", method);

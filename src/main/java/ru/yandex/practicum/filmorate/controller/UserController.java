@@ -57,14 +57,13 @@ public class UserController {
     }
 
     public boolean validate(User user, HttpMethod method){
-            if(user.getEmail() == null | user.getEmail().isBlank() | (user.getEmail().indexOf('@') < 0)){
+            if(user.getEmail() == null || user.getEmail().isBlank() || (user.getEmail().indexOf('@') < 0)){
                 throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @", method);
-            } else if(user.getLogin() == null | user.getLogin().isBlank() | (user.getLogin().indexOf(' ') >= 0)){
+            } else if(user.getLogin() == null || user.getLogin().isBlank() || (user.getLogin().indexOf(' ') >= 0)){
                 throw new ValidationException("Логин не может быть пустым и содержать пробелы", method);
-            } else if(user.getBirthday() == null | user.getBirthday().isAfter(LocalDate.now())){
+            } else if(user.getBirthday() == null || user.getBirthday().isAfter(LocalDate.now())){
                 throw new ValidationException("Дата рождения не может быть в будущем.", method);
-            } else if(user.getName() == null | user.getName().isBlank()){
-                System.out.println("test");
+            } else if(user.getName() == null || user.getName().isBlank()){
                 user.setName(user.getLogin());
                 return true;
             }
