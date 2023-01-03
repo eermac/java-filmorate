@@ -1,5 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,19 +10,18 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.util.HttpMethod;
 import ru.yandex.practicum.filmorate.util.ValidationException;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
+@Slf4j
 public class UserController {
-    private final static Logger log = LoggerFactory.getLogger(UserController.class);
-    private HashMap<Integer, User> users = new HashMap<>();
+    private Map<Integer, User> users = new HashMap<>();
     private int idGenerate = 0;
 
     public Integer setId(){
@@ -29,7 +30,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User addUser(@RequestBody User user) {
+    public User add(@Valid @RequestBody User user) {
         log.info("Добавляем пользователя");
 
         if(validate(user, HttpMethod.POST)){
@@ -41,7 +42,7 @@ public class UserController {
     }
 
     @PutMapping
-    public User updateFilm(@RequestBody User user) {
+    public User update(@Valid @RequestBody User user) {
         log.info("Обновляем данные пользователя");
 
         if(validate(user, HttpMethod.PUT) & users.containsKey(user.getId())){
@@ -52,16 +53,16 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers() {
+    public List<User> getAll() {
         return new ArrayList<>(users.values());
     }
 
     public boolean validate(User user, HttpMethod method){
             if(user.getEmail() == null || user.getEmail().isBlank() || (user.getEmail().indexOf('@') < 0)){
                 throw new ValidationException("Электронная почта не может быть пустой и должна содержать символ @", method);
-            } else if(user.getLogin() == null || user.getLogin().isBlank() || (user.getLogin().indexOf(' ') >= 0)){
+            } else if(user.getLogin().isBlank() || (user.getLogin().indexOf(' ') >= 0)){
                 throw new ValidationException("Логин не может быть пустым и содержать пробелы", method);
-            } else if(user.getBirthday() == null || user.getBirthday().isAfter(LocalDate.now())){
+            } else if(user.getBirthday().isAfter(LocalDate.now())){
                 throw new ValidationException("Дата рождения не может быть в будущем.", method);
             } else if(user.getName() == null || user.getName().isBlank()){
                 user.setName(user.getLogin());
