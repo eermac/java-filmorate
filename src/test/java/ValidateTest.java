@@ -15,7 +15,7 @@ public class ValidateTest {
     void validateUserTestName(){
         User user = new User(12, "email@", "login", "name", LocalDate.now());
 
-        UserController controller = new UserController();
+        UserController controller = new UserController(userService);
         final boolean validateTest = controller.validate(user, HttpMethod.POST);
         final String nameTest = user.getName();
 
@@ -28,7 +28,7 @@ public class ValidateTest {
     void validateUserTestNameIsEmpty(){
         User user = new User(12, "email@", "login", null, LocalDate.now());
 
-        UserController controller = new UserController();
+        UserController controller = new UserController(userService);
         final boolean validateTest = controller.validate(user, HttpMethod.POST);
         final String nameTest = user.getName();
 
@@ -41,7 +41,7 @@ public class ValidateTest {
     void validateUserTestLogin(){
         User user = new User(12, "email@", "login", "name", LocalDate.now());
 
-        UserController controller = new UserController();
+        UserController controller = new UserController(userService);
         final boolean validateTest = controller.validate(user, HttpMethod.POST);
         final String loginTest = user.getLogin();
 
@@ -53,7 +53,7 @@ public class ValidateTest {
     @Test
     void validateUserTestLoginIsEmpty(){
         User user = new User(12, "email@", "", "name", LocalDate.now());
-        UserController controller = new UserController();
+        UserController controller = new UserController(userService);
 
         try {
             controller.validate(user, HttpMethod.POST);
