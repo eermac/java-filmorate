@@ -67,5 +67,13 @@ public class FilmController {
         if (count == null) return this.filmService.getPopularFilms();
         else return this.filmService.getPopularFilmsCount(count);
     }
+
+    @ExceptionHandler
+    public Map<String, String> handle(final ValidationException e) {
+        return Map.of(
+                "error", "Ошибка запроса.",
+                "errorMessage", e.getMessage()
+        );
+    }
 }
 

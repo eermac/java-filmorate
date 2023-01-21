@@ -132,7 +132,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public boolean validate(User user, HttpMethod method) {
-        if (user.getLogin().indexOf(' ') >= 0) {
+        if (user == null || user.getLogin().indexOf(' ') >= 0) {
             throw new ValidationException("Логин не может быть пустым и содержать пробелы", method);
         } else if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());

@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.util.ValidationException;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -66,5 +67,13 @@ public class UserController {
     @GetMapping("/{id}")
     public User getUser(@RequestBody @PathVariable Integer id) {
         return this.userService.getUser(id);
+    }
+
+    @ExceptionHandler
+    public Map<String, String> handle(final ValidationException e) {
+        return Map.of(
+                "error", "Ошибка запроса.",
+                "errorMessage", e.getMessage()
+        );
     }
 }
