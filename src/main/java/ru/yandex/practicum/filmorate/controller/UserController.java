@@ -1,19 +1,15 @@
 package ru.yandex.practicum.filmorate.controller;
 
-
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.util.HttpMethod;
 import ru.yandex.practicum.filmorate.util.ValidationException;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,50 +17,63 @@ import java.util.Map;
 @RequestMapping("/users")
 @Slf4j
 public class UserController {
-    private Map<Integer, User> users = new HashMap<>();
-    private int idGenerate = 0;
+    private final UserService userService;
 
-    public Integer setId(){
-        idGenerate++;
-        return this.idGenerate;
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @PostMapping
     public User add(@Valid @RequestBody User user) {
-        log.info("Добавляем пользователя");
-
-        if(validate(user, HttpMethod.POST)){
-            user.setId(setId());
-            users.put(user.getId(), user);
-        }
-
-        return user;
+        return this.userService.add(user);
     }
 
     @PutMapping
     public User update(@Valid @RequestBody User user) {
-        log.info("Обновляем данные пользователя");
-
-        if(validate(user, HttpMethod.PUT) & users.containsKey(user.getId())){
-            users.put(user.getId(), user);
-        } else throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return user;
+        return this.userService.update(user);
     }
 
     @GetMapping
     public List<User> getAll() {
-        return new ArrayList<>(users.values());
+        return this.userService.getAll();
     }
 
-    public boolean validate(User user, HttpMethod method){
-            if(user.getLogin().indexOf(' ') >= 0){
-                throw new ValidationException("Логин не может быть пустым и содержать пробелы", method);
-            } else if (user.getName() == null || user.getName().isBlank()){
-                user.setName(user.getLogin());
-                return true;
-            }
+    @DeleteMapping
+    public User delete(@Valid @RequestBody User user) {
+        return this.userService.delete(user);
+    }
 
-        return true;
+    @PutMapping("/{id}/friends/{friendId}")
+    public User addFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+        return this.userService.addFriend(id, friendId);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public User deleteFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
+        return this.userService.deleteFriend(id, friendId);
+    }
+
+    @GetMapping("/{id}/friends")
+    public List<User> getAllFriend(@PathVariable Integer id) {
+        return this.userService.getAllFriend(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public List<User> getCommonFriend(@PathVariable Integer id, @PathVariable Integer otherId) {
+        return this.userService.getCommonFriend(id, otherId);
+    }
+
+    @GetMapping("/{id}")
+    public User getUser(@RequestBody @PathVariable Integer id) {
+        return this.userService.getUser(id);
+    }
+
+    @ExceptionHandler
+    public Map<String, String> handle(final ValidationException e) {
+        return Map.of(
+                "error", "Ошибка запроса.",
+                "errorMessage", e.getMessage()
+        );
     }
 }
