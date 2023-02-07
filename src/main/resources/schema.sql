@@ -1,3 +1,11 @@
+drop table if exists films;
+drop table if exists genres;
+drop table if exists group_films;
+drop table if exists mpa;
+drop table if exists users;
+drop table if exists friendship;
+drop table if exists usersLike;
+
 CREATE TABLE IF NOT EXISTS genres (
 genre_id integer PRIMARY KEY,
 name varchar(100)
