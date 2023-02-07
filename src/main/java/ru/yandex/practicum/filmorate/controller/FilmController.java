@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genres;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.service.UserService;
@@ -22,7 +24,6 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/films")
 @Slf4j
 public class FilmController {
     private final FilmService filmService;
@@ -32,40 +33,60 @@ public class FilmController {
         this.filmService = filmService;
     }
 
-    @PostMapping
+    @PostMapping("/films")
     public Film add(@Valid @RequestBody Film film) {
         return this.filmService.add(film);
     }
 
-    @PutMapping
+    @PutMapping("/films")
     public Film update(@Valid @RequestBody Film film) {
         return this.filmService.update(film);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/films/{id}")
     public Film getFilm(@RequestBody @PathVariable Integer id) {
         return this.filmService.getFilm(id);
     }
 
-    @GetMapping
+    @GetMapping("/films")
     public List<Film> getAll() {
         return this.filmService.getAll();
     }
 
-    @PutMapping("/{id}/like/{userId}")
+    @PutMapping("/films/{id}/like/{userId}")
     public Integer addLike(@PathVariable Integer id, @PathVariable Integer userId) {
         return this.filmService.addLike(id, userId);
     }
 
-    @DeleteMapping("/{id}/like/{userId}")
+    @DeleteMapping("/films/{id}/like/{userId}")
     public Integer deleteLike(@PathVariable Integer id, @PathVariable Integer userId) {
         return this.filmService.deleteLike(id, userId);
     }
 
-    @GetMapping("/popular")
+    @GetMapping("/films/popular")
     public List<Film> getPopularFilmsCount(@RequestParam(required = false) Integer count) {
         if (count == null) return this.filmService.getPopularFilms();
         else return this.filmService.getPopularFilmsCount(count);
+    }
+
+    @GetMapping("/mpa/{Id}")
+    public Mpa getMpa(@PathVariable Integer Id) {
+        return this.filmService.getMpa(Id);
+    }
+
+    @GetMapping("/mpa")
+    public List<Mpa> getAllMpa() {
+        return this.filmService.getAllMpa();
+    }
+
+    @GetMapping("/genres")
+    public List<Genres> getAllGenres() {
+        return this.filmService.getAllGenres();
+    }
+
+    @GetMapping("/genres/{Id}")
+    public Genres getGenre(@PathVariable Integer Id) {
+        return this.filmService.getGenre(Id);
     }
 
     @ExceptionHandler
