@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.util.HttpMethod;
 import ru.yandex.practicum.filmorate.util.ValidationException;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -23,7 +25,7 @@ public class FilmDbStorage implements FilmStorage {
     private int idGenerateLike = 0;
     private final static LocalDate FIRST_RELEASE_FILM = LocalDate.of(1895, 12, 28);
 
-    Comparator<Genres> userComparator = new Comparator<>() {
+    private Comparator<Genres> userComparator = new Comparator<>() {
         @Override
         public int compare(Genres genre, Genres genre2) {
             if(genre.getId() > (genre2.getId())) return 1;
@@ -58,15 +60,28 @@ public class FilmDbStorage implements FilmStorage {
             film.setId(setId());
 
             if (film.getGenres() != null) {
-                for (Genres next: film.getGenres()) {
-                    GroupFilms groupFilms = new GroupFilms(setGroupId(), film.getId(), next.getId());
-                    String sqlQuery2 = "insert into GROUP_FILMS(GROUP_FILMS_ID, FILM_ID, GENRE_ID) " +
-                            "values (?, ?, ?)";
-                    jdbcTemplate.update(sqlQuery2,
-                            groupFilms.getGroupFilmsId(),
-                            groupFilms.getFilmId(),
-                            groupFilms.getGenreId());
+                String sqlQuery2 = "insert into GROUP_FILMS(GROUP_FILMS_ID, FILM_ID, GENRE_ID) " +
+                             "values (?, ?, ?)";
+
+                List<Genres> genres = new ArrayList<>();
+                for(Genres next: film.getGenres()){
+                    genres.add(next);
                 }
+
+                jdbcTemplate.batchUpdate(sqlQuery2, new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement pStmt, int j) throws SQLException {
+                        Genres genre = genres.get(j);
+                        pStmt.setInt(1, setGroupId());
+                        pStmt.setInt(2, film.getId());
+                        pStmt.setInt(3, genre.getId());
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return genres.size();
+                    }
+                });
             }
 
             jdbcTemplate.update(sqlQuery,
@@ -105,16 +120,28 @@ public class FilmDbStorage implements FilmStorage {
                 }
 
                 film.setGenres(newGenres);
+                String sqlQuery2 = "insert into GROUP_FILMS(GROUP_FILMS_ID, FILM_ID, GENRE_ID) " +
+                        "values (?, ?, ?)";
 
-                for (Genres next: film.getGenres()) {
-                    GroupFilms groupFilms = new GroupFilms(setGroupId(), film.getId(), next.getId());
-                    String sqlQuery2 = "insert into GROUP_FILMS(GROUP_FILMS_ID, FILM_ID, GENRE_ID) " +
-                            "values (?, ?, ?)";
-                    jdbcTemplate.update(sqlQuery2,
-                            groupFilms.getGroupFilmsId(),
-                            groupFilms.getFilmId(),
-                            groupFilms.getGenreId());
+                List<Genres> genres = new ArrayList<>();
+                for(Genres next: film.getGenres()){
+                    genres.add(next);
                 }
+
+                jdbcTemplate.batchUpdate(sqlQuery2, new BatchPreparedStatementSetter() {
+                    @Override
+                    public void setValues(PreparedStatement pStmt, int j) throws SQLException {
+                        Genres genre = genres.get(j);
+                        pStmt.setInt(1, setGroupId());
+                        pStmt.setInt(2, film.getId());
+                        pStmt.setInt(3, genre.getId());
+                    }
+
+                    @Override
+                    public int getBatchSize() {
+                        return genres.size();
+                    }
+                });
             }
 
             jdbcTemplate.update(sqlQuery,
@@ -131,13 +158,13 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getAll() {
-        SqlRowSet queryAllFilms = jdbcTemplate.queryForRowSet("select FILM_ID from FILMS");
         List<Film> filmList = new ArrayList<>();
+        String queryAllFilms = "select FILM_ID from FILMS";
+        List<Integer> filmId = jdbcTemplate.queryForList(queryAllFilms, Integer.class);
 
-        while(queryAllFilms.next()) {
-            filmList.add(getFilm(queryAllFilms.getInt("FILM_ID")));
+        for(Integer next: filmId){
+            filmList.add(getFilm(next));
         }
-
         return filmList;
     }
 
