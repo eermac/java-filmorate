@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -24,4 +25,5 @@ public class User {
     @PastOrPresent
     private LocalDate birthday;
     private Set<Integer> friendList;
+    private boolean status;
 }
